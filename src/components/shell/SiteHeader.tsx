@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Wordmark } from '@/components/brand/Brand'
 import { primaryNav } from '@/data/navigation'
+import { useScrolledPast } from '@/lib/media'
 import { cn } from '@/lib/utils'
 
 /**
@@ -21,17 +22,6 @@ import { cn } from '@/lib/utils'
  *  - touch: tapping opens the panel; the panel's first link is the section
  *    overview, so no destination is unreachable
  */
-
-function useScrolledPast(threshold: number) {
-  const [past, setPast] = useState(false)
-  useEffect(() => {
-    const onScroll = () => setPast(window.scrollY > threshold)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [threshold])
-  return past
-}
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -56,11 +46,15 @@ export function SiteHeader() {
     if (closeTimer.current) window.clearTimeout(closeTimer.current)
   }, [])
 
-  // Route change closes everything.
-  useEffect(() => {
+  // A route change closes everything. Adjusted during render against the
+  // previous path rather than in an effect, so the panel never paints open
+  // for a frame on the page it just navigated to.
+  const [lastPath, setLastPath] = useState(pathname)
+  if (pathname !== lastPath) {
+    setLastPath(pathname)
     setOpenGroup(null)
     setMobileOpen(false)
-  }, [pathname])
+  }
 
   // Escape closes; click outside closes.
   useEffect(() => {

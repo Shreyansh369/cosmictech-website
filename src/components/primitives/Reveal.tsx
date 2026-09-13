@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 interface RevealProps {
@@ -19,20 +19,20 @@ interface RevealProps {
  * Scroll reveal.
  *
  * Deliberately not built on an animation library: one IntersectionObserver
- * and a CSS transition costs nothing at runtime, and the reduced-motion
- * media query in globals.css neutralises it without any JS branch.
+ * and a CSS transition cost nothing at runtime, and the reduced-motion media
+ * query in globals.css neutralises the whole thing without a JS branch.
+ *
+ * The observer is attached from a ref callback and marks the element with a
+ * data attribute directly, so revealing never goes through React state and
+ * cannot cause a render. If IntersectionObserver is unavailable the element
+ * is marked immediately — content must never be left hidden.
  */
 export function Reveal({ children, delay = 0, as = 'rise', className }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [shown, setShown] = useState(false)
-
-  useEffect(() => {
-    const node = ref.current
+  const attach = useCallback((node: HTMLDivElement | null) => {
     if (!node) return
 
-    // If the browser cannot observe, show immediately rather than hide content.
     if (typeof IntersectionObserver === 'undefined') {
-      setShown(true)
+      node.setAttribute('data-shown', '')
       return
     }
 
@@ -40,7 +40,7 @@ export function Reveal({ children, delay = 0, as = 'rise', className }: RevealPr
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setShown(true)
+            entry.target.setAttribute('data-shown', '')
             observer.disconnect()
           }
         }
@@ -54,8 +54,7 @@ export function Reveal({ children, delay = 0, as = 'rise', className }: RevealPr
 
   return (
     <div
-      ref={ref}
-      data-shown={shown ? '' : undefined}
+      ref={attach}
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
         'transition-[opacity,transform] duration-700 ease-[var(--ease-datum)] motion-reduce:transition-none',

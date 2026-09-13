@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Band, Measure, Section } from '@/components/primitives/Layout'
+import { Measure, Section } from '@/components/primitives/Layout'
 import { Action } from '@/components/primitives/Action'
 import { IndexLabel } from '@/components/primitives/Type'
 import { primaryNav } from '@/data/navigation'

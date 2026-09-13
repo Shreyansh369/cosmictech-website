@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Cosmictech mark, reduced for favicon legibility: at 16px the emblem's
+       eight spokes collapse into noise, so the reduction keeps the hub, the
+       orbital ring and the star. -->
+  <rect width="32" height="32" fill="#0A0D10"/>
+  <g fill="none" stroke="#E4542C" stroke-width="1.6">
+    <ellipse cx="15" cy="17" rx="13.5" ry="5.4" transform="rotate(-20 15 17)"/>
+    <circle cx="15" cy="17" r="7.6"/>
+    <circle cx="15" cy="17" r="2.6"/>
+  </g>
+  <path d="M27.2 3.2 28.1 5.9 30.8 6.8 28.1 7.7 27.2 10.4 26.3 7.7 23.6 6.8 26.3 5.9z" fill="#E4542C"/>
+</svg>

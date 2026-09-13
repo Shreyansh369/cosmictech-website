@@ -13,11 +13,14 @@ import { cn } from '@/lib/utils'
  * scene is a view of.
  */
 
-const W = 560
-const ROW = 54
-const PAD_TOP = 26
-const LEFT = 46
-const RIGHT = W - 16
+/* The drawing is sized so its type stays legible when the SVG is scaled
+   down to a phone's width: a narrower viewBox means a larger effective
+   font size at the same rendered width. */
+const W = 420
+const ROW = 50
+const PAD_TOP = 24
+const LEFT = 40
+const RIGHT = W - 14
 
 export function CorridorDiagram({
   activeLayer,
@@ -91,7 +94,7 @@ export function CorridorDiagram({
               x={2}
               y={y + 3.5}
               className={cn(
-                'fill-current font-mono text-[10px] tracking-[0.12em]',
+                'fill-current font-mono text-[11px] tracking-[0.1em]',
                 active ? 'text-accent' : 'text-faint',
               )}
             >
@@ -148,27 +151,19 @@ export function CorridorDiagram({
               />
             ))}
 
-            {/* Label — set above the run so the drawing stays within bounds */}
+            {/* Label above the run. The layer's role is deliberately not
+                repeated here — every context that renders this drawing also
+                renders the list that carries it, and duplicating it would
+                only force the type smaller. */}
             <text
               x={LEFT - 8}
-              y={y - 13}
+              y={y - 12}
               className={cn(
-                'fill-current font-display text-[15px] font-medium',
+                'fill-current font-display text-[17px] font-medium',
                 active ? 'text-accent' : 'text-primary',
               )}
             >
               {layer.name}
-            </text>
-            <text
-              x={RIGHT + 8}
-              y={y - 13}
-              textAnchor="end"
-              className={cn(
-                'fill-current font-mono text-[10px] tracking-[0.08em]',
-                active ? 'text-accent' : 'text-faint',
-              )}
-            >
-              {layer.role}
             </text>
           </g>
         )

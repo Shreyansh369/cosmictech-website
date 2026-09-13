@@ -5,6 +5,12 @@ import { SiteFooter } from '@/components/shell/SiteFooter'
 import { organizationJsonLd } from '@/lib/seo'
 import { site } from '@/data/site'
 
+/*
+ * Font preloading is handled by Next itself: the @fontsource faces imported
+ * in globals.css are discovered at build time and preload links are emitted
+ * automatically. Adding our own would only duplicate them.
+ */
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {

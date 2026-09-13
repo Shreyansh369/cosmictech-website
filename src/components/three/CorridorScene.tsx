@@ -1,5 +1,12 @@
 'use client'
 
+/* eslint-disable react-hooks/immutability --
+ * This module drives an imperative WebGL renderer. Writing into the geometry's
+ * colour buffer and moving the camera inside useFrame is how three.js works;
+ * routing per-frame updates through React state would re-render sixty times a
+ * second. The rule's assumption of React-managed state does not apply here.
+ */
+
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
@@ -109,7 +116,7 @@ function Lattice({
   activeLayer: string | null
   reducedMotion: boolean
 }) {
-  const { positions, meta } = useMemo(buildLattice, [])
+  const { positions, meta } = useMemo(() => buildLattice(), [])
   const colorAttr = useMemo(() => new Float32Array(positions.length), [positions.length])
   const geometryRef = useRef<THREE.BufferGeometry>(null)
 
@@ -123,28 +130,13 @@ function Lattice({
   const dummy = useMemo(() => new THREE.Object3D(), [])
   const tmpColor = useMemo(() => new THREE.Color(), [])
 
-  useMemo(() => {
-    // Initial node placement never changes; only colour does.
-    const mesh = nodesRef.current
-    if (!mesh) return
-    let i = 0
-    for (const layer of systemLayers) {
-      for (const z of sectionBoundaries) {
-        dummy.position.set(0, layer.elevation, z)
-        dummy.updateMatrix()
-        mesh.setMatrixAt(i, dummy.matrix)
-        i++
-      }
-    }
-    mesh.instanceMatrix.needsUpdate = true
-  }, [dummy])
-
   useFrame(({ clock }) => {
     const mesh = nodesRef.current
     const geo = geometryRef.current
     if (!mesh || !geo) return
 
-    // Place instances on first frame (ref is null during useMemo above).
+    // Instance placement is fixed; do it once, on the first frame we have
+    // a mesh. Only colour changes after that.
     if (!mesh.userData.placed) {
       let i = 0
       for (const layer of systemLayers) {

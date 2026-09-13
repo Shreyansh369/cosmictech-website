@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils'
  */
 
 const W = 1000
-const H = 560
+const H = 500
 
 const px = (x: number) => (x / 100) * W
 const py = (y: number) => (y / 100) * H
@@ -179,8 +179,10 @@ export function SystemSchematic({
                   onClick={() => setActive(lit ? null : node.id)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
+                      // Focus already selects the node, so Enter must confirm
+                      // the selection rather than toggle it straight back off.
                       e.preventDefault()
-                      setActive(lit ? null : node.id)
+                      setActive(node.id)
                     }
                   }}
                   className={cn(
@@ -207,8 +209,8 @@ export function SystemSchematic({
                     <circle
                       cx={x}
                       cy={y}
-                      r={6.5}
-                      strokeWidth={1.6}
+                      r={7.5}
+                      strokeWidth={1.8}
                       stroke="currentColor"
                       className={cn(
                         'transition-colors duration-300',
@@ -218,11 +220,11 @@ export function SystemSchematic({
                     />
                   ) : (
                     <rect
-                      x={x - 6.5}
-                      y={y - 6.5}
-                      width={13}
-                      height={13}
-                      strokeWidth={1.6}
+                      x={x - 7.5}
+                      y={y - 7.5}
+                      width={15}
+                      height={15}
+                      strokeWidth={1.8}
                       stroke="currentColor"
                       className={cn(
                         'transition-colors duration-300',
@@ -235,9 +237,9 @@ export function SystemSchematic({
                   {/* Leader line to the label — engineering callout convention */}
                   <line
                     x1={x}
-                    y1={y - 9}
+                    y1={y - 10}
                     x2={x}
-                    y2={y - 17}
+                    y2={y - 18}
                     stroke="currentColor"
                     strokeWidth={1}
                     className={lit || near ? 'text-accent' : 'text-steel-600'}
@@ -245,7 +247,7 @@ export function SystemSchematic({
 
                   <text
                     x={x}
-                    y={y - 22}
+                    y={y - 23}
                     textAnchor="middle"
                     className={cn(
                       'font-display text-[15px] font-medium transition-colors duration-300',

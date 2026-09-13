@@ -65,7 +65,7 @@
   --color-signal-400: #f07a4f;
 
   /* ---- Fluid type scale ---------------------------------------------- */
-  --text-display-1: clamp(3rem, 7.4vw, 8.5rem);
+  --text-display-1: clamp(2.75rem, 7.4vw, 8.5rem);
   --text-display-1--line-height: 0.92;
   --text-display-1--letter-spacing: -0.035em;
   --text-display-2: clamp(2.375rem, 4.8vw, 5.25rem);

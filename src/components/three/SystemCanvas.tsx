@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { CorridorDiagram } from './CorridorDiagram'
 import { systemLayers } from '@/data/systemLayers'
+import { useMediaQuery, usePrefersReducedMotion } from '@/lib/media'
 import { cn } from '@/lib/utils'
 
 /**
@@ -25,40 +26,15 @@ const CorridorScene = dynamic(() => import('./CorridorScene'), {
   loading: () => null,
 })
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setReduced(mq.matches)
-    update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
-  }, [])
-  return reduced
-}
-
-function useCanRender3D() {
-  const [ok, setOk] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 64rem)')
-    const check = () => {
-      if (!mq.matches) {
-        setOk(false)
-        return
-      }
-      // Confirm WebGL is actually available before importing the renderer.
-      try {
-        const canvas = document.createElement('canvas')
-        setOk(Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl')))
-      } catch {
-        setOk(false)
-      }
-    }
-    check()
-    mq.addEventListener('change', check)
-    return () => mq.removeEventListener('change', check)
-  }, [])
-  return ok
+/** Confirm WebGL exists before importing the renderer at all. */
+function hasWebGL(): boolean {
+  if (typeof document === 'undefined') return false
+  try {
+    const canvas = document.createElement('canvas')
+    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'))
+  } catch {
+    return false
+  }
 }
 
 function useInView<T extends HTMLElement>() {
@@ -85,7 +61,10 @@ function useInView<T extends HTMLElement>() {
 export function SystemCanvas() {
   const [active, setActive] = useState<string | null>(null)
   const reducedMotion = usePrefersReducedMotion()
-  const can3D = useCanRender3D()
+  const wideEnough = useMediaQuery('(min-width: 64rem)')
+  // Below 1024px the corridor cannot be read at a useful size, so the 2D
+  // drawing is the primary rendering there and three.js is never requested.
+  const can3D = wideEnough && hasWebGL()
   const { ref, inView } = useInView<HTMLDivElement>()
 
   const activeLayer = systemLayers.find((l) => l.id === active) ?? null

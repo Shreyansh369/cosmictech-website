@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePrefersReducedMotion } from '@/lib/media'
 import { cn } from '@/lib/utils'
 
 /**
@@ -28,15 +29,14 @@ const STEPS = SIGNALS + 3
 
 export function AspectSequence({ className }: { className?: string }) {
   const [step, setStep] = useState(3)
-  const [animate, setAnimate] = useState(false)
+  const reducedMotion = usePrefersReducedMotion()
+  const animate = !reducedMotion
 
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) return
-    setAnimate(true)
+    if (reducedMotion) return
     const id = window.setInterval(() => setStep((s) => (s + 1) % STEPS), 2200)
     return () => window.clearInterval(id)
-  }, [])
+  }, [reducedMotion])
 
   /** The occupied section index; signals at a lower index are behind it. */
   const occupied = step
