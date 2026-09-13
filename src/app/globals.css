@@ -1,0 +1,385 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* ==========================================================================
+   COSMICTECH DESIGN SYSTEM
+   Design language: "Instrumentation" — an engineering drawing sheet
+   translated into a digital surface. Hairline rules, drawing indices,
+   signal-aspect state, datum-line motion. No decoration without purpose.
+   ========================================================================== */
+
+@theme {
+  /* ---- Type families ------------------------------------------------- */
+  --font-display: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* ---- Palette: graphite (primary ground) ---------------------------- */
+  --color-ink-950: #06080a;
+  --color-ink-900: #0a0d10;
+  --color-ink-850: #0e1216;
+  --color-ink-800: #12171b;
+  --color-ink-700: #1a2026;
+  --color-ink-600: #232b32;
+  --color-ink-500: #313b43;
+
+  /* ---- Palette: steel / aluminium ------------------------------------ */
+  --color-steel-600: #3f4a53;
+  --color-steel-500: #56636d;
+  --color-steel-400: #7c8891;
+  --color-steel-300: #a6b0b7;
+  --color-steel-200: #c9d0d5;
+  --color-steel-100: #e4e8ea;
+
+  /* ---- Palette: paper (reading ground) ------------------------------- */
+  --color-paper-300: #ddd9d1;
+  --color-paper-200: #e8e5df;
+  --color-paper-100: #f5f3ef;
+  --color-paper-50: #fbfaf8;
+
+  /* ---- Palette: brand navy (from the Cosmictech emblem) -------------- */
+  --color-navy-900: #08182b;
+  --color-navy-800: #0c2540;
+  --color-navy-700: #123454;
+  --color-navy-600: #1b4870;
+  --color-navy-500: #2a628f;
+
+  /* ---- Signal aspects ------------------------------------------------
+     Railway aspect colours. These exist ONLY inside signalling diagrams,
+     where green, yellow and red carry defined operational meaning. They are
+     never used as interface colour, and every diagram that uses them also
+     labels the aspect in text. Both are muted well below full saturation so
+     they sit inside the industrial palette rather than on top of it. */
+  --color-aspect-green: #4f9468;
+  --color-aspect-yellow: #d3a343;
+  --color-aspect-red: #e4542c;
+
+  /* ---- Palette: signal accent (state only, never decoration) --------- */
+  --color-signal-700: #9e3417;
+  --color-signal-600: #c4401e;
+  --color-signal-500: #e4542c;
+  --color-signal-400: #f07a4f;
+
+  /* ---- Fluid type scale ---------------------------------------------- */
+  --text-display-1: clamp(3rem, 7.4vw, 8.5rem);
+  --text-display-1--line-height: 0.92;
+  --text-display-1--letter-spacing: -0.035em;
+  --text-display-2: clamp(2.375rem, 4.8vw, 5.25rem);
+  --text-display-2--line-height: 0.96;
+  --text-display-2--letter-spacing: -0.03em;
+  --text-h1: clamp(2rem, 3.5vw, 3.625rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.025em;
+  --text-h2: clamp(1.625rem, 2.4vw, 2.625rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h3: clamp(1.1875rem, 1.5vw, 1.5rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.012em;
+  --text-h4: 1.0625rem;
+  --text-h4--line-height: 1.35;
+  --text-h4--letter-spacing: -0.008em;
+  --text-lead: clamp(1.0625rem, 1.15vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+  --text-lead--letter-spacing: -0.011em;
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.6;
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.11em;
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.35;
+  --text-micro--letter-spacing: 0.14em;
+
+  /* ---- Motion -------------------------------------------------------- */
+  --ease-datum: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-state: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---- Breakpoints (per the responsive matrix) ----------------------- */
+  --breakpoint-xs: 26.875rem; /* 430 */
+  --breakpoint-sm: 40rem;     /* 640 */
+  --breakpoint-md: 48rem;     /* 768 */
+  --breakpoint-lg: 64rem;     /* 1024 */
+  --breakpoint-xl: 80rem;     /* 1280 */
+  --breakpoint-2xl: 90rem;    /* 1440 */
+  --breakpoint-3xl: 120rem;   /* 1920 */
+  --breakpoint-4xl: 160rem;   /* 2560 */
+
+  /* Radii are near-zero by system decision: this is an instrument, not a card UI. */
+  --radius-none: 0px;
+  --radius-hair: 1px;
+}
+
+/* ==========================================================================
+   SURFACES
+   Three grounds share one system. A page or a section declares its ground
+   with data-surface; every token below re-resolves. This is how the site
+   changes register without changing language.
+   ========================================================================== */
+
+:root,
+[data-surface='graphite'] {
+  --surface: var(--color-ink-900);
+  --surface-sunken: var(--color-ink-950);
+  --surface-raised: var(--color-ink-850);
+  --surface-inset: var(--color-ink-800);
+  --hairline: color-mix(in oklab, var(--color-steel-400) 17%, transparent);
+  --hairline-strong: color-mix(in oklab, var(--color-steel-300) 34%, transparent);
+  --text-primary: var(--color-paper-100);
+  --text-secondary: var(--color-steel-300);
+  --text-tertiary: var(--color-steel-400);
+  --text-faint: var(--color-steel-500);
+  --accent: var(--color-signal-500);
+  --accent-contrast: var(--color-signal-400);
+  --focus-ring: var(--color-signal-400);
+  color-scheme: dark;
+}
+
+[data-surface='navy'] {
+  --surface: var(--color-navy-900);
+  --surface-sunken: #050f1c;
+  --surface-raised: var(--color-navy-800);
+  --surface-inset: var(--color-navy-800);
+  --hairline: color-mix(in oklab, var(--color-navy-500) 30%, transparent);
+  --hairline-strong: color-mix(in oklab, var(--color-navy-500) 58%, transparent);
+  --text-primary: var(--color-paper-100);
+  --text-secondary: #9fb4c6;
+  --text-tertiary: #6e8599;
+  --text-faint: #52687c;
+  --accent: var(--color-signal-400);
+  --accent-contrast: var(--color-signal-400);
+  --focus-ring: var(--color-signal-400);
+  color-scheme: dark;
+}
+
+[data-surface='paper'] {
+  --surface: var(--color-paper-100);
+  --surface-sunken: var(--color-paper-200);
+  --surface-raised: var(--color-paper-50);
+  --surface-inset: var(--color-paper-200);
+  --hairline: color-mix(in oklab, var(--color-ink-900) 14%, transparent);
+  --hairline-strong: color-mix(in oklab, var(--color-ink-900) 30%, transparent);
+  --text-primary: var(--color-ink-900);
+  --text-secondary: var(--color-steel-600);
+  --text-tertiary: var(--color-steel-500);
+  --text-faint: var(--color-steel-400);
+  --accent: var(--color-signal-600);
+  --accent-contrast: var(--color-signal-700);
+  --focus-ring: var(--color-signal-600);
+  color-scheme: light;
+}
+
+/* Expose semantic tokens as Tailwind colour utilities. */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-inset: var(--surface-inset);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-tertiary: var(--text-tertiary);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--hairline);
+    min-width: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* The fixed header is 4.5rem; anchored sections must clear it. */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Numerals align in every data context. */
+  table, .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Never rely on the UA default; a11y requires a visible, consistent ring. */
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+  }
+
+  svg {
+    display: block;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--hairline);
+  }
+}
+
+/* ==========================================================================
+   LAYOUT PRIMITIVES
+   ========================================================================== */
+
+@utility ct-container {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 96rem; /* 1536 */
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 4rem;
+  }
+  @media (width >= 120rem) {
+    max-width: 108rem; /* 1728 — holds a readable measure on 2560/3840 */
+    padding-inline: 5.5rem;
+  }
+}
+
+/* A narrower well for sustained reading. */
+@utility ct-measure {
+  max-width: 68ch;
+}
+
+@utility ct-measure-tight {
+  max-width: 54ch;
+}
+
+/* ==========================================================================
+   MOTION
+   Language: a datum line draws, then content rises into it.
+   Nothing floats, bounces, or loops without cause.
+   ========================================================================== */
+
+@keyframes ct-draw-x {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes ct-rise {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ct-aspect-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+.ct-rule-draw {
+  transform-origin: left center;
+  animation: ct-draw-x 700ms var(--ease-datum) both;
+}
+
+.ct-aspect-live {
+  animation: ct-aspect-pulse 2.4s var(--ease-state) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ct-aspect-live {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ==========================================================================
+   ENGINEERING SURFACE TEXTURES
+   Used structurally (to register content against a sheet), not decoratively.
+   ========================================================================== */
+
+/* Drawing-sheet column rules: vertical hairlines on the layout grid. */
+@utility ct-sheet-rules {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--hairline) 0 1px,
+    transparent 1px 100%
+  );
+  background-size: calc(100% / 6) 100%;
+}
+
+/* Hairline top border that draws in on reveal. */
+@utility ct-datum {
+  border-top: 1px solid var(--hairline);
+}
+
+@utility ct-hairline-y {
+  border-block: 1px solid var(--hairline);
+}
+
+/* Scrollbar: quiet, matches the instrument. */
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--surface-sunken); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-steel-600);
+    border: 3px solid var(--surface-sunken);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-steel-500); }
+}
