@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Reveal } from './Reveal'
 
@@ -62,9 +62,11 @@ export function SectionHead({
   className?: string
   align?: 'start' | 'split'
 }) {
-  const Heading = (`h${level}` as ElementType)
-  const size =
-    level === 1 ? 'text-h1' : level === 2 ? 'text-h2' : 'text-h3'
+  // Resolved to literal tags rather than a computed `ElementType`: a union
+  // of three heading tags intersects to a sound props type, whereas
+  // `ElementType` collapses children and className to `never`.
+  const Heading = level === 1 ? 'h1' : level === 2 ? 'h2' : 'h3'
+  const size = level === 1 ? 'text-h1' : level === 2 ? 'text-h2' : 'text-h3'
 
   return (
     <header className={cn('relative', className)}>

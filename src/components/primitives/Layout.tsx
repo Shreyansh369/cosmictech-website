@@ -1,7 +1,28 @@
-import type { ElementType, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export type Surface = 'graphite' | 'paper' | 'navy'
+
+/**
+ * Tags a layout block may render as.
+ *
+ * Deliberately narrower than React's `ElementType`. Using `ElementType`
+ * directly as a JSX tag makes TypeScript intersect the props of every
+ * possible element, and because void elements such as <br>, <img> and
+ * <input> declare `children?: never`, that intersection collapses
+ * `children`, `className` and `id` to `never` — every attribute then fails
+ * to type-check. Restricting the set keeps the intersection sound, and it
+ * states the real constraint anyway: a page band is never an <img>.
+ */
+export type BlockTag =
+  | 'div'
+  | 'section'
+  | 'article'
+  | 'aside'
+  | 'main'
+  | 'header'
+  | 'footer'
+  | 'nav'
 
 /** Horizontal well. Every page-level block sits inside one of these. */
 export function Container({
@@ -11,7 +32,7 @@ export function Container({
 }: {
   children: ReactNode
   className?: string
-  as?: ElementType
+  as?: BlockTag
 }) {
   return <Tag className={cn('ct-container', className)}>{children}</Tag>
 }
@@ -35,7 +56,7 @@ export function Section({
   surface?: Surface
   className?: string
   id?: string
-  as?: ElementType
+  as?: BlockTag
   /** Suppress the container; the child manages its own width. */
   bleed?: boolean
   /** Draw the top datum rule. */
